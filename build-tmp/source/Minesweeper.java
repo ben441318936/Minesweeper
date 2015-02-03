@@ -20,7 +20,7 @@ public class Minesweeper extends PApplet {
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
-private ArrayList <MSButton> bombs; //ArrayList of just the minesweeper buttons that are mined
+private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
 
 public void setup ()
 {
@@ -97,20 +97,41 @@ public class MSButton
     
     public void mousePressed () 
     {
-        clicked = true;
+        if(mouseButton==LEFT)
+        {
+            clicked=true;
+        }
+        if(mouseButton==RIGHT)
+        {
+            if(clicked==false)
+            {
+                marked=!marked;
+            }
+        }
         //your code here
+        println("clicked: "+clicked);
+        println("marked: "+marked);
+
     }
 
     public void draw () 
     {    
-        if (marked)
-            fill(0);
-        // else if( clicked && bombs.contains(this) ) 
-        //     fill(255,0,0);
-        else if(clicked)
-            fill( 200 );
+        if (clicked)
+        {
+            fill(200);
+        }
+        else if( clicked && bombs.contains(this) ) 
+        {
+            fill(255,0,0);
+        }
+        else if(marked)
+        {
+            fill( 0 );
+        }
         else 
+        {
             fill( 100 );
+        }
 
         rect(x, y, width, height);
         fill(0);
