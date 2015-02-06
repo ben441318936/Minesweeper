@@ -19,6 +19,8 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
+public static int NUM_BOMBS=40;
+public int nBombs=NUM_BOMBS;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
 
@@ -26,7 +28,7 @@ public void setup ()
 {
     size(400, 400);
     textAlign(CENTER,CENTER);
-    
+    stroke(0);
     // make the manager
     Interactive.make( this );
     
@@ -43,14 +45,24 @@ public void setup ()
 }
 public void setBombs()
 {
-    //your code
+    for(int b=NUM_BOMBS;b>0;b--)
+    {
+        int r=(int)Math.random()*20+1;
+        int c=(int)Math.random()*20+1;
+        if(bombs.contains(buttons[r][c])==false)
+        {
+            bombs.add(buttons[r][c]);
+        }
+    }
 }
 
 public void draw ()
 {
     background( 0 );
     if(isWon())
+    {
         displayWinningMessage();
+    }
 }
 public boolean isWon()
 {
@@ -118,7 +130,12 @@ public class MSButton
     {    
         if (clicked)
         {
-            fill(200);
+            if(bombs.contains(buttons[r][c]))
+            {
+                fill(255,0,0);
+            }
+            else
+                fill(200);
         }
         else if( clicked && bombs.contains(this) ) 
         {
