@@ -5,6 +5,7 @@ public static int NUM_BOMBS=40;
 public int nBombs=NUM_BOMBS;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
+public int nB=0;
 
 void setup ()
 {
@@ -24,16 +25,23 @@ void setup ()
 
     //declare and initialize buttons
     setBombs();
+    println("nB: "+nB);
 }
 public void setBombs()
 {
     for(int b=NUM_BOMBS;b>0;b--)
     {
-        int r=(int)Math.random()*20+1;
-        int c=(int)Math.random()*20+1;
-        if(bombs.contains(buttons[r][c])==false)
+        int r=(int)(Math.random()*20);
+        int c=(int)(Math.random()*20);
+        if(!bombs.contains(buttons[r][c]))
         {
             bombs.add(buttons[r][c]);
+            nB++;
+        }
+        else
+        {
+            b++;
+            
         }
     }
 }
@@ -109,7 +117,7 @@ public class MSButton
     }
 
     public void draw () 
-    {    
+    {   
         if (clicked)
         {
             if(bombs.contains(buttons[r][c]))
@@ -125,7 +133,7 @@ public class MSButton
         }
         else if(marked)
         {
-            fill( 0 );
+            fill( 255,255,0 );
         }
         else 
         {
@@ -143,12 +151,23 @@ public class MSButton
     public boolean isValid(int r, int c)
     {
         //your code here
-        return false;
+        if((r<0 || r>20) && (c<0 || c>20))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     public int countBombs(int row, int col)
     {
         int numBombs = 0;
         //your code here
+        for(int r=row-1;r<=row+1;r++)
+        {
+            for(int c=col-1;c<=col+1)
+        }
         return numBombs;
     }
 }
