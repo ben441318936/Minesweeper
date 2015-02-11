@@ -19,11 +19,12 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
-public static int NUM_BOMBS=40;
+public static int NUM_BOMBS=100;
 public int nBombs=NUM_BOMBS;
+public boolean isLost=false;
+public boolean noBombs=true;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
-public int nB=0;
 
 public void setup ()
 {
@@ -40,21 +41,20 @@ public void setup ()
             buttons[x][y] = new MSButton(x,y);
         }
     }
-
-    //declare and initialize buttons
-    setBombs();
-    println("nB: "+nB);
 }
-public void setBombs()
+public void setBombs(int rr, int cc)
 {
-    for(int b=NUM_BOMBS;b>0;b--)
+    if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
+    if(rr-2 > 0 && cc+2 < 20) {bombs.add(buttons[rr-2][cc+2]);}
+    if(rr+2 < 20 && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
+    if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}
+    for(int b=NUM_BOMBS-4;b>0;b--)
     {
         int r=(int)(Math.random()*20);
         int c=(int)(Math.random()*20);
-        if(!bombs.contains(buttons[r][c]))
+        if(!bombs.contains(buttons[r][c]) && (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
         {
             bombs.add(buttons[r][c]);
-            nB++;
         }
         else
         {
@@ -71,23 +71,40 @@ public void draw ()
     {
         displayWinningMessage();
     }
+    else if(isLost==true)
+    {
+        displayLosingMessage();
+        for(int x=0;x<NUM_ROWS;x++)
+        {
+            for(int y=0;y<NUM_COLS;y++)
+            {
+                buttons[x][y].mousePressed();
+            }
+        }
+    }
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    for(int x=0;x<NUM_ROWS;x++)
+    {
+        for(int y=0;y<NUM_COLS;y++)
+        {
+            if(buttons[x][y].isClicked()==false)
+            {
+                if(!(bombs.contains(buttons[x][y]))) {return false;}
+            }
+        }
+    } 
+    return true;
 }
 public void displayLosingMessage()
 {
-    //your code here
-    println("Losing Message");
+
 }
 public void displayWinningMessage()
 {
-    //your code here
-    println("Winning Message");
-}
 
+}
 public class MSButton
 {
     private int r, c;
@@ -121,40 +138,54 @@ public class MSButton
     {
         if(mouseButton==LEFT)
         {
+            if(noBombs==true)
+            {
+                noBombs=false;
+                setBombs(r,c);
+            }
             if(marked==false)
             {
                 clicked=true;
             }
-            if(bombs.contains(this))
+            if(clicked==true)
             {
-                displayLosingMessage();
-            }
-            else if(countBombs(r,c)>0)
-            {
-                setLabel(""+countBombs(r,c));
-            }
-            else
-            {
-                for(int row=r-1;row<=r+1;row++)
+                if(bombs.contains(this))
                 {
-                    for(int col=c-1;col<=c+1;col++)
+                    isLost=true;
+                }
+                else if(countBombs(r,c)>0)
+                {
+                    if(!bombs.contains(this))
                     {
-                        if(isValid(row,col))
+                        setLabel(""+countBombs(r,c));
+                    }
+                }
+                else
+                {
+                    for(int row=r-1;row<=r+1;row++)
+                    {
+                        for(int col=c-1;col<=c+1;col++)
                         {
-                            buttons[row][col].mousePressed();
+                            if(isValid(row,col) && !(buttons[row][col].isClicked()) && !(buttons[row][col].isMarked()))
+                            {
+                                buttons[row][col].mousePressed();
+                            }
                         }
-                    } 
+                    }
+                }
+            }  
+        }
+        if(noBombs==false)
+        {
+            if(mouseButton==RIGHT)
+            {
+                if(clicked==false)
+                {
+                    marked=!marked;
+
                 }
             }
         }
-        if(mouseButton==RIGHT)
-        {
-            if(clicked==false)
-            {
-                marked=!marked;
-            }
-        }
-        //your code here 
     }
 
     public void draw () 
@@ -170,9 +201,16 @@ public class MSButton
         }
         else if(marked)
         {
-            fill( 255,255,0 );
+            if(isWon() || (isLost && bombs.contains(this)))
+            {
+                fill(0,255,0);
+            }
+            else
+            {
+                fill( 255,255,0 );
+            }
         }
-        else 
+        else
         {
             fill( 100 );
         }
@@ -187,7 +225,6 @@ public class MSButton
     }
     public boolean isValid(int r, int c)
     {
-        //your code here
         if((r<0 || r>19) || (c<0 || c>19))
         {
             return false;
@@ -200,26 +237,43 @@ public class MSButton
     public int countBombs(int row, int col)
     {
         int numBombs = 0;
-        //your code here
-        for(int r=row-1;r<=row+1;r++)
+        for(int c=col-1;c<=col+1;c++)
         {
-            for(int c=col-1;c<=col+1;c++)
+            if(isValid(row-1,c))
             {
-                if(isValid(r,c))
+                if(bombs.contains(buttons[row-1][c]))
                 {
-                    if(bombs.contains(buttons[r][c]))
-                    {
-                        numBombs++;
-                    }
-                } 
+                    numBombs++;
+                }
+            }
+        }
+        if(isValid(row,c-1))
+        {
+            if(bombs.contains(buttons[row][c-1]))
+            {
+                numBombs++;
+            }
+        }
+        if(isValid(row,c+1))
+        {
+            if(bombs.contains(buttons[row][c+1]))
+            {
+                numBombs++;
+            }
+        }
+        for(int c=col-1;c<=col+1;c++)
+        {
+            if(isValid(row+1,c))
+            {
+                if(bombs.contains(buttons[row+1][c]))
+                {
+                    numBombs++;
+                }
             }
         }
         return numBombs;
     }
 }
-
-
-
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Minesweeper" };
     if (passedArgs != null) {
