@@ -1,7 +1,7 @@
 import de.bezier.guido.*;
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
-public static int NUM_BOMBS=60;
+public static int NUM_BOMBS=50;
 public int nBombs=NUM_BOMBS;
 public boolean isLost=false;
 public boolean noBombs=true;
