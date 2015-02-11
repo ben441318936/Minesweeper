@@ -114,7 +114,7 @@ public class MSButton
     {
         return clicked;
     }
-    // called by manager
+    // called by manager 
     
     public void mousePressed () 
     {
