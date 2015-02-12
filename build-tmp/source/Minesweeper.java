@@ -19,10 +19,10 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
-public static int NUM_BOMBS=50;
+public static int NUM_BOMBS=10;
 public int nBombs=NUM_BOMBS;
 public boolean isLost=false;
-public boolean noBombs=true;
+public boolean noBombs=false;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
 
@@ -41,18 +41,23 @@ public void setup ()
             buttons[x][y] = new MSButton(x,y);
         }
     }
+    setBombs();
 }
-public void setBombs(int rr, int cc)
+public void setBombs()
 {
-    if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
-    if(rr-2 > 0 && cc+2 < 20) {bombs.add(buttons[rr-2][cc+2]);}
-    if(rr+2 < 20 && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
-    if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}
-    for(int b=NUM_BOMBS-4;b>0;b--)
+    //if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
+    //if(rr-2 > 0 && cc+2 < 20) {bombs.add(buttons[rr-2][cc+2]);}
+    //if(rr+2 < 20 && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
+    //if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}
+    for(int b=NUM_BOMBS;b>0;b--)
     {
         int r=(int)(Math.random()*20);
         int c=(int)(Math.random()*20);
-        if(!bombs.contains(buttons[r][c]) && (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
+        /*if(!bombs.contains(buttons[r][c]) && (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
+        {
+            bombs.add(buttons[r][c]);
+        }*/
+        if(!bombs.contains(buttons[r][c]))
         {
             bombs.add(buttons[r][c]);
         }
@@ -138,11 +143,11 @@ public class MSButton
     {
         if(mouseButton==LEFT)
         {
-            if(noBombs==true)
+            /*if(noBombs==true)
             {
                 noBombs=false;
                 setBombs(r,c);
-            }
+            }*/
             if(marked==false)
             {
                 clicked=true;
