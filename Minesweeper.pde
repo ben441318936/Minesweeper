@@ -114,8 +114,8 @@ public class MSButton
         height = (int)(400/NUM_ROWS);
         r = rr;
         c = cc; 
-        x = c*width;
-        y = r*height;
+        x = (int)c*(int)width;
+        y = (int)r*(int)height;
         label = "";
         marked = clicked = false;
         Interactive.add( this ); // register it with the manager
@@ -247,7 +247,7 @@ public class MSButton
             }
             else 
             {
-                fill(200);    
+                fill(220);    
             }
         }
         else if(marked)
