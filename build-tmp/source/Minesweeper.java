@@ -46,15 +46,15 @@ public void setup ()
 }
 public void setBombs(int rr, int cc)
 {
-    if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
+    /*if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
     if(rr-2 > 0 && cc+2 < 20) {bombs.add(buttons[rr-2][cc+2]);}
     if(rr+2 < 20 && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
-    if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}
-    for(int b=NUM_BOMBS-4;b>0;b--)
+    if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}*/
+    for(int b=NUM_BOMBS;b>0;b--)
     {
         int r=(int)(Math.random()*20);
         int c=(int)(Math.random()*20);
-        if(!bombs.contains(buttons[r][c]) && (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
+        if(!bombs.contains(buttons[r][c]) )//&& (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
         {
             bombs.add(buttons[r][c]);
         }
@@ -292,9 +292,9 @@ public class MSButton
         fill(0);
         text(label,x+width/2,y+height/2);
     }
-    public void setLabel(String newLabel)
+    public void setLabel(String nLabel)
     {
-        label = newLabel;
+        label = nLabel;
     }
     public boolean isValid(int r, int c)
     {
