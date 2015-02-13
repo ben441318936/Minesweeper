@@ -128,8 +128,8 @@ public class MSButton
     
     public MSButton ( int rr, int cc )
     {
-        width = 400/NUM_COLS;
-        height = 400/NUM_ROWS;
+        width = (int)(400/NUM_COLS);
+        height = (int)(400/NUM_ROWS);
         r = rr;
         c = cc; 
         x = c*width;
@@ -224,9 +224,9 @@ public class MSButton
         }
         //println(r+" "+c+" clicked: "+clicked);
         //println(r+" "+c+" marked: "+marked);
-        println("newGame: "+newGame);
-        println("isLost: "+isLost);
-        println("noBombs: "+noBombs);
+        //println("newGame: "+newGame);
+        //println("isLost: "+isLost);
+        //println("noBombs: "+noBombs);
         if(newGame==true)
         {
             isLost=false;
