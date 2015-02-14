@@ -19,7 +19,7 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=20;
 public static int NUM_COLS=20;
-public static int NUM_BOMBS=50;
+public static int NUM_BOMBS=30;
 public boolean isLost=false;
 public boolean noBombs=true;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
