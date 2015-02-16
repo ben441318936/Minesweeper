@@ -12,7 +12,7 @@ private boolean clickable=false;
 
 void setup ()
 {
-    size(400, 400);
+    size(400, 430);
     textAlign(CENTER,CENTER);
     stroke(0);
     // make the manager
@@ -95,10 +95,14 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
+    fill(255);
+    text("You lost ! Click to restart.",200,415);
 
 }
 public void displayWinningMessage()
 {
+    fill(255);
+    text("You Won ! Click to restart.",200,415);
 
 }
 public class MSButton
