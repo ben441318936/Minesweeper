@@ -17,6 +17,7 @@ void setup ()
 {
     size(SIZE_WIDTH, SIZE_HEIGHT+SIZE_MESSAGE);
     textAlign(CENTER,CENTER);
+    textSize(15);
     stroke(0);
     // make the manager
     Interactive.make( this );
