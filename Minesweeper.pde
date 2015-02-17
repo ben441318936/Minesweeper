@@ -215,6 +215,32 @@ public class MSButton
                 }
             }
         }
+        if(mouseButton==CENTER)
+        {
+            if(noBombs==false)
+            {
+                if(isWon()==false)
+                {
+                    if(isLost==false)
+                    {
+                        for(int rr=r-1;r<=r+1;r++)
+                        {
+                            for(int cc=c-1;c<=c+1;c++)
+                            {
+                                if(isValid(rr,cc))
+                                {
+                                    if(buttons[rr][cc].isMarked()==false )//&& buttons[rr][cc].isClicked()==false)
+                                    {
+                                        buttons[rr][cc].mousePressed();
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }  
+                }
+            }
+        }
         //println(r+" "+c+" clicked: "+clicked);
         //println(r+" "+c+" marked: "+marked);
         //println("newGame: "+newGame);

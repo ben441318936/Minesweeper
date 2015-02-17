@@ -37,6 +37,7 @@ public void setup ()
     textAlign(CENTER,CENTER);
     textSize(11);
     stroke(0);
+    smooth();
     // make the manager
     Interactive.make( this );
     
@@ -229,6 +230,32 @@ public class MSButton
                             marked=!marked;
                         }
                     }
+                }
+            }
+        }
+        if(mouseButton==CENTER)
+        {
+            if(noBombs==false)
+            {
+                if(isWon()==false)
+                {
+                    if(isLost==false)
+                    {
+                        for(int rr=r-1;r<=r+1;r++)
+                        {
+                            for(int cc=c-1;c<=c+1;c++)
+                            {
+                                if(isValid(rr,cc))
+                                {
+                                    if(buttons[rr][cc].isMarked()==false )//&& buttons[rr][cc].isClicked()==false)
+                                    {
+                                        buttons[rr][cc].mousePressed();
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }  
                 }
             }
         }
