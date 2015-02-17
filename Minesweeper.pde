@@ -2,8 +2,8 @@ import de.bezier.guido.*;
 public static int NUM_ROWS=30;
 public static int NUM_COLS=50;
 public static int NUM_BOMBS=200;
-public static int SIZE_WIDTH=1000;
-public static int SIZE_HEIGHT=600;
+public static int SIZE_WIDTH=750;
+public static int SIZE_HEIGHT=450;
 public static int SIZE_MESSAGE=30;
 public boolean isLost=false;
 public boolean noBombs=true;
@@ -17,7 +17,7 @@ void setup ()
 {
     size(SIZE_WIDTH, SIZE_HEIGHT+SIZE_MESSAGE);
     textAlign(CENTER,CENTER);
-    textSize(15);
+    textSize(11);
     stroke(0);
     // make the manager
     Interactive.make( this );
@@ -100,12 +100,14 @@ public boolean isWon()
 public void displayLosingMessage()
 {
     fill(255);
+    textSize(14);
     text("You lost ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
 
 }
 public void displayWinningMessage()
 {
     fill(255);
+    textSize(14);
     text("You Won ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
 
 }
@@ -280,6 +282,7 @@ public class MSButton
 
         rect(x, y, width, height);
         fill(0);
+        textSize(11);
         text(label,x+width/2,y+height/2);
     }
     public void setLabel(String nLabel)
