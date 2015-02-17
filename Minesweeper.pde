@@ -1,7 +1,10 @@
 import de.bezier.guido.*;
-public static int NUM_ROWS=20;
-public static int NUM_COLS=20;
-public static int NUM_BOMBS=50;
+public static int NUM_ROWS=30;
+public static int NUM_COLS=50;
+public static int NUM_BOMBS=200;
+public static int SIZE_WIDTH=1000;
+public static int SIZE_HEIGHT=600;
+public static int SIZE_MESSAGE=30;
 public boolean isLost=false;
 public boolean noBombs=true;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
@@ -12,7 +15,7 @@ private boolean clickable=false;
 
 void setup ()
 {
-    size(400, 430);
+    size(SIZE_WIDTH, SIZE_HEIGHT+SIZE_MESSAGE);
     textAlign(CENTER,CENTER);
     stroke(0);
     // make the manager
@@ -29,13 +32,13 @@ void setup ()
 public void setBombs(int rr, int cc)
 {
     if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
-    if(rr-2 > 0 && cc+2 < 20) {bombs.add(buttons[rr-2][cc+2]);}
-    if(rr+2 < 20 && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
-    if(rr+2 < 20 && cc+2 < 20) {bombs.add(buttons[rr+2][cc+2]);}
+    if(rr-2 > 0 && cc+2 < NUM_COLS) {bombs.add(buttons[rr-2][cc+2]);}
+    if(rr+2 < NUM_ROWS && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
+    if(rr+2 < NUM_ROWS && cc+2 < NUM_COLS) {bombs.add(buttons[rr+2][cc+2]);}
     for(int b=NUM_BOMBS;b>0;b--)
     {
-        int r=(int)(Math.random()*20);
-        int c=(int)(Math.random()*20);
+        int r=(int)(Math.random()*NUM_ROWS);
+        int c=(int)(Math.random()*NUM_COLS);
         if(!bombs.contains(buttons[r][c]) && (!((r>=rr-1)&&(r<=rr+1)) || !((c>=cc-1)&&(c<=cc+1))) && !((r==rr-2)&&(c>=cc-1 && c<=cc+1)) && !((r==rr+2)&&(c>=cc-1 && c<=cc+1)) && !((c==cc-2)&&(r>=rr-1 && r<=rr+1)) && !((c==cc+2)&&(r>=rr-1 && r<=rr+1)))
         {
             bombs.add(buttons[r][c]);
@@ -96,13 +99,13 @@ public boolean isWon()
 public void displayLosingMessage()
 {
     fill(255);
-    text("You lost ! Click to restart.",200,415);
+    text("You lost ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
 
 }
 public void displayWinningMessage()
 {
     fill(255);
-    text("You Won ! Click to restart.",200,415);
+    text("You Won ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
 
 }
 public class MSButton
@@ -114,8 +117,8 @@ public class MSButton
     
     public MSButton ( int rr, int cc )
     {
-        width = (int)(400/NUM_COLS);
-        height = (int)(400/NUM_ROWS);
+        width = (int)(SIZE_WIDTH/NUM_COLS);
+        height = (int)(SIZE_HEIGHT/NUM_ROWS);
         r = rr;
         c = cc; 
         x = (int)c*(int)width;
@@ -284,7 +287,7 @@ public class MSButton
     }
     public boolean isValid(int r, int c)
     {
-        if((r<0 || r>19) || (c<0 || c>19))
+        if((r<0 || r>NUM_ROWS-1) || (c<0 || c>NUM_COLS-1))
         {
             return false;
         }
