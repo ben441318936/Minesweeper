@@ -19,6 +19,7 @@ void setup ()
     textAlign(CENTER,CENTER);
     textSize(11);
     stroke(0);
+    smooth();
     // make the manager
     Interactive.make( this );
     
