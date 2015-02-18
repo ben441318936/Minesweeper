@@ -31,7 +31,6 @@ private boolean newGame=false;
 private int n=0;
 private boolean clickable=false;
 private MSButton middleClicked;
-private int hi=0;
 
 public void setup ()
 {
@@ -134,18 +133,12 @@ public void displayLosingMessage()
     fill(255);
     textSize(14);
     text("You lost ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
-
 }
 public void displayWinningMessage()
 {
     fill(255);
     textSize(14);
     text("You Won ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
-
-}
-public void setMiddleClicked(MSButton b)
-{
-    middleClicked=b;
 }
 public class MSButton
 {
