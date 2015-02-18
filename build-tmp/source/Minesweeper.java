@@ -126,8 +126,8 @@ public void instructionMessage()
 {
     fill(255);
     textSize(14);
-    text("Left click to uncover tiles. Right click to mark potential mines. ",width/2,height-SIZE_MESSAGE/2-9);
-    text("Left click on a number to uncover the spaces around it.",width/2,height-SIZE_MESSAGE/2+4);
+    text("Left click to uncover tiles. Right click to mark potential mines. ",width/2,height-SIZE_MESSAGE/2-7);
+    text("Left click on a number to uncover the spaces around it.",width/2,height-SIZE_MESSAGE/2+6);
 }
 public void displayLosingMessage()
 {
