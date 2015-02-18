@@ -19,7 +19,7 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=30;
 public static int NUM_COLS=50;
-public static int NUM_BOMBS=10;
+public static int NUM_BOMBS=200;
 public static int SIZE_WIDTH=750;
 public static int SIZE_HEIGHT=450;
 public static int SIZE_MESSAGE=30;
@@ -85,6 +85,10 @@ public void draw ()
             clickable=true;
         }
     }
+    if(!isWon()&&!isLost)
+    {
+        instructionMessage();
+    }
     if(isWon())
     {
         displayWinningMessage();
@@ -117,6 +121,13 @@ public boolean isWon()
         }
     } 
     return true;
+}
+public void instructionMessage()
+{
+    fill(255);
+    textSize(14);
+    text("Left click to uncover tiles. Right click to mark potential mines. ",width/2,height-SIZE_MESSAGE/2-9);
+    text("Left click on a number to uncover the spaces around it.",width/2,height-SIZE_MESSAGE/2+4);
 }
 public void displayLosingMessage()
 {
