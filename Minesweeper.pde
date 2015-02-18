@@ -12,6 +12,8 @@ private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of j
 private boolean newGame=false;
 private int n=0;
 private boolean clickable=false;
+private MSButton middleClicked;
+private int hi=0;
 
 void setup ()
 {
@@ -22,7 +24,7 @@ void setup ()
     smooth();
     // make the manager
     Interactive.make( this );
-    
+
     for(int x=0;x<NUM_ROWS;x++)
     {
         for(int y=0;y<NUM_COLS;y++)
@@ -112,6 +114,10 @@ public void displayWinningMessage()
     text("You Won ! Click to restart.",width/2,height-(SIZE_MESSAGE/2));
 
 }
+public void setMiddleClicked(MSButton b)
+{
+    middleClicked=b;
+}
 public class MSButton
 {
     private int r, c;
@@ -130,6 +136,14 @@ public class MSButton
         label = "";
         marked = clicked = false;
         Interactive.add( this ); // register it with the manager
+    }
+    public int getRow()
+    {
+        return r;
+    }
+    public int getCol()
+    {
+        return c;
     }
     public boolean isMarked()
     {
@@ -156,6 +170,10 @@ public class MSButton
             {
                 if(isWon()==false)
                 {
+                    if(clicked && middleClicked==null && !isLost && !noBombs)
+                    {
+                        middleClicked=buttons[r][c];
+                    }
                     if(noBombs==true)
                     {
                         noBombs=false;
@@ -191,7 +209,51 @@ public class MSButton
                                 }
                             }
                         }
-                    }                
+                    }
+                    if(!isLost)
+                    {
+                        if(middleClicked!=null)
+                        {
+                            int rr=middleClicked.getRow();
+                            int cc=middleClicked.getCol();
+                            if(middleClicked.getRow()==r && middleClicked.getCol()==c)
+                            {
+                                if(isValid(rr-1,cc-1) && !buttons[rr-1][cc-1].isMarked() && !buttons[rr-1][cc-1].isClicked())
+                                {
+                                    buttons[rr-1][cc-1].mousePressed();
+                                }
+                                if(isValid(rr-1,cc) && !buttons[rr-1][cc].isMarked() && !buttons[rr-1][cc].isClicked())
+                                {
+                                    buttons[rr-1][cc].mousePressed();
+                                }
+                                if(isValid(rr-1,cc+1) && !buttons[rr-1][cc+1].isMarked() && !buttons[rr-1][cc+1].isClicked())
+                                {
+                                    buttons[rr-1][cc+1].mousePressed();
+                                }
+                                if(isValid(rr,cc-1) && !buttons[rr][cc-1].isMarked() && !buttons[rr][cc-1].isClicked())
+                                {
+                                    buttons[rr][cc-1].mousePressed();
+                                }
+                                if(isValid(rr,cc+1) && !buttons[rr][cc+1].isMarked() && !buttons[rr][cc+1].isClicked())
+                                {
+                                    buttons[rr][cc+1].mousePressed();
+                                }
+                                if(isValid(rr+1,cc-1) && !buttons[rr+1][cc-1].isMarked() && !buttons[rr+1][cc-1].isClicked())
+                                {
+                                    buttons[rr+1][cc-1].mousePressed();
+                                }
+                                if(isValid(rr+1,cc) && !buttons[rr+1][cc].isMarked() && !buttons[rr+1][cc].isClicked())
+                                {
+                                    buttons[rr+1][cc].mousePressed();
+                                }
+                                if(isValid(rr+1,cc+1) && !buttons[rr+1][cc+1].isMarked() && !buttons[rr+1][cc+1].isClicked())
+                                {
+                                    buttons[rr+1][cc+1].mousePressed();
+                                }
+                                middleClicked=null;
+                            }
+                        }
+                    } 
                 } 
                 if(!marked)
                 {
@@ -215,37 +277,7 @@ public class MSButton
                 }
             }
         }
-        if(mouseButton==CENTER)
-        {
-            if(noBombs==false)
-            {
-                if(isWon()==false)
-                {
-                    if(isLost==false)
-                    {
-                        for(int rr=r-1;r<=r+1;r++)
-                        {
-                            for(int cc=c-1;c<=c+1;c++)
-                            {
-                                if(isValid(rr,cc))
-                                {
-                                    if(buttons[rr][cc].isMarked()==false )//&& buttons[rr][cc].isClicked()==false)
-                                    {
-                                        buttons[rr][cc].mousePressed();
-                                    }
-                                }
-                            }
-                        }
-                        
-                    }  
-                }
-            }
-        }
-        //println(r+" "+c+" clicked: "+clicked);
-        //println(r+" "+c+" marked: "+marked);
-        //println("newGame: "+newGame);
-        //println("isLost: "+isLost);
-        //println("noBombs: "+noBombs);
+
         if(newGame==true)
         {
             isLost=false;
@@ -270,10 +302,11 @@ public class MSButton
             }
             bombs=new ArrayList <MSButton> ();
             newGame=false;
+            middleClicked=null;
             loop();
         }
     }
-
+    
     public void draw () 
     {   
         if(clicked)
@@ -316,9 +349,9 @@ public class MSButton
     {
         label = nLabel;
     }
-    public boolean isValid(int r, int c)
+    public boolean isValid(int rr, int cc)
     {
-        if((r<0 || r>NUM_ROWS-1) || (c<0 || c>NUM_COLS-1))
+        if((rr<0 || rr>NUM_ROWS-1) || (cc<0 || cc>NUM_COLS-1))
         {
             return false;
         }
