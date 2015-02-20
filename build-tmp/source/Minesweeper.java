@@ -19,7 +19,7 @@ public class Minesweeper extends PApplet {
 
 public static int NUM_ROWS=30;
 public static int NUM_COLS=50;
-public static int NUM_BOMBS=200;
+public static int NUM_BOMBS=50;
 public static int SIZE_WIDTH=750;
 public static int SIZE_HEIGHT=450;
 public static int SIZE_MESSAGE=30;
@@ -28,9 +28,15 @@ public boolean noBombs=true;
 private MSButton[][] buttons=new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs=new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
 private boolean newGame=false;
-private int n=0;
+
 private boolean clickable=false;
-private MSButton middleClicked;
+private int n=0;
+
+//private boolean midClickable=true;
+//private int m=0;
+
+//private boolean bClickable=true;
+//private MSButton middleClicked;
 
 public void setup ()
 {
@@ -52,11 +58,12 @@ public void setup ()
 }
 public void setBombs(int rr, int cc)
 {
-    if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);}
-    if(rr-2 > 0 && cc+2 < NUM_COLS) {bombs.add(buttons[rr-2][cc+2]);}
-    if(rr+2 < NUM_ROWS && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);}
-    if(rr+2 < NUM_ROWS && cc+2 < NUM_COLS) {bombs.add(buttons[rr+2][cc+2]);}
-    for(int b=NUM_BOMBS;b>0;b--)
+    int bo=0;
+    if(rr-2 > 0 && cc-2 > 0) {bombs.add(buttons[rr-2][cc-2]);bo++;}
+    if(rr-2 > 0 && cc+2 < NUM_COLS) {bombs.add(buttons[rr-2][cc+2]);bo++;}
+    if(rr+2 < NUM_ROWS && cc-2 > 0) {bombs.add(buttons[rr+2][cc-2]);bo++;}
+    if(rr+2 < NUM_ROWS && cc+2 < NUM_COLS) {bombs.add(buttons[rr+2][cc+2]);bo++;}
+    for(int b=NUM_BOMBS-bo;b>0;b--)
     {
         int r=(int)(Math.random()*NUM_ROWS);
         int c=(int)(Math.random()*NUM_COLS);
@@ -78,9 +85,9 @@ public void draw ()
     if(noBombs)
     {
         n++;
-        if(n>2) 
+        if(n>1) 
         {
-            n=2;
+            n=1;
             clickable=true;
         }
     }
@@ -90,8 +97,10 @@ public void draw ()
     }
     if(isWon())
     {
+        isLost=false;
         displayWinningMessage();
         newGame=true;
+        noLoop();
     }
     else if(isLost==true)
     {
@@ -125,8 +134,8 @@ public void instructionMessage()
 {
     fill(255);
     textSize(14);
-    text("Left click to uncover tiles. Right click to mark potential mines. ",width/2,height-SIZE_MESSAGE/2-7);
-    text("Left click on a number to uncover the spaces around it.",width/2,height-SIZE_MESSAGE/2+6);
+    text("Left click to uncover tiles. Right click to mark potential mines. ",width/2,height-SIZE_MESSAGE/2);
+    //text("Left click on a number to uncover the spaces around it.",width/2,height-SIZE_MESSAGE/2+6);
 }
 public void displayLosingMessage()
 {
@@ -146,6 +155,7 @@ public class MSButton
     private float x,y, width, height;
     private boolean clicked, marked;
     private String label;
+    //private int cl;
     
     public MSButton ( int rr, int cc )
     {
@@ -157,6 +167,7 @@ public class MSButton
         y = (int)r*(int)height;
         label = "";
         marked = clicked = false;
+        //cl=color(100);
         Interactive.add( this ); // register it with the manager
     }
     public int getRow()
@@ -184,6 +195,10 @@ public class MSButton
     {
         marked=b;
     }
+    /*public int getCl()
+    {
+        return cl;
+    }*/
     public void mousePressed () 
     {
         if(mouseButton==LEFT)
@@ -192,94 +207,106 @@ public class MSButton
             {
                 if(isWon()==false)
                 {
-                    if(clicked && middleClicked==null && !isLost && !noBombs)
+                    /*if(!noBombs && clicked && !marked && middleClicked==null && !isLost && !noBombs && !label.equals("") && bClickable)
                     {
                         middleClicked=buttons[r][c];
+                        bClickable=false;
+                        //println("hi");
                     }
-                    if(noBombs==true)
-                    {
-                        noBombs=false;
-                        setBombs(r,c);
-                    } 
-                    if(marked==false)
-                    {
-                        clicked=true;
-                        if(bombs.contains(this))
+                    else
+                    {*/
+                        if(noBombs==true)
                         {
-                            if(isLost==false)
-                            {
-                                isLost=true;
-                            }
-                        }
-                        else if(countBombs(r,c)>0)
+                            noBombs=false;
+                            setBombs(r,c);
+                        } 
+                        if(marked==false)
                         {
-                            if(!bombs.contains(this))
+                            //midClickable=false;
+                            clicked=true;
+                            if(bombs.contains(this))
                             {
-                                setLabel(""+countBombs(r,c));
-                            }
-                        }
-                        else
-                        {
-                            for(int row=r-1;row<=r+1;row++)
-                            {
-                                for(int col=c-1;col<=c+1;col++)
+                                if(isLost==false && isWon()==false)
                                 {
-                                    if(isValid(row,col) && !(buttons[row][col].isClicked()) && !(buttons[row][col].isMarked()))
+                                    isLost=true;
+                                }
+                            }
+                            else if(countBombs(r,c)>0)
+                            {
+                                if(!bombs.contains(this))
+                                {
+                                    setLabel(""+countBombs(r,c));
+                                }
+                            }
+                            else
+                            {
+                                for(int row=r-1;row<=r+1;row++)
+                                {
+                                    for(int col=c-1;col<=c+1;col++)
                                     {
-                                        buttons[row][col].mousePressed();
+                                        if(isValid(row,col) && !(buttons[row][col].isClicked()) && !(buttons[row][col].isMarked()))
+                                        {
+                                            buttons[row][col].mousePressed();
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if(!isLost)
+                    //} 
+                    /*if(!isLost )//&& midClickable)
                     {
-                        if(middleClicked!=null)
+                        if(middleClicked!=null && bClickable==false)
                         {
                             int rr=middleClicked.getRow();
                             int cc=middleClicked.getCol();
-                            if(middleClicked.getRow()==r && middleClicked.getCol()==c)
+                            if(rr==r && cc==c)
                             {
-                                if(isValid(rr-1,cc-1) && !buttons[rr-1][cc-1].isMarked() && !buttons[rr-1][cc-1].isClicked())
+                                if(isValid(rr-1,cc-1) && !buttons[rr-1][cc-1].isMarked() && !buttons[rr-1][cc-1].isClicked() )//&& buttons[rr-1][cc-1].getCl()==color(100))
                                 {
                                     buttons[rr-1][cc-1].mousePressed();
                                 }
-                                if(isValid(rr-1,cc) && !buttons[rr-1][cc].isMarked() && !buttons[rr-1][cc].isClicked())
+                                if(isValid(rr-1,cc) && !buttons[rr-1][cc].isMarked() && !buttons[rr-1][cc].isClicked() )//&& buttons[rr-1][cc].getCl()==color(100))
                                 {
                                     buttons[rr-1][cc].mousePressed();
                                 }
-                                if(isValid(rr-1,cc+1) && !buttons[rr-1][cc+1].isMarked() && !buttons[rr-1][cc+1].isClicked())
+                                if(isValid(rr-1,cc+1) && !buttons[rr-1][cc+1].isMarked() && !buttons[rr-1][cc+1].isClicked() )//&& buttons[rr-1][cc+1].getCl()==color(100))
                                 {
                                     buttons[rr-1][cc+1].mousePressed();
                                 }
-                                if(isValid(rr,cc-1) && !buttons[rr][cc-1].isMarked() && !buttons[rr][cc-1].isClicked())
+                                if(isValid(rr,cc-1) && !buttons[rr][cc-1].isMarked() && !buttons[rr][cc-1].isClicked() )//&& buttons[rr][cc-1].getCl()==color(100))
                                 {
                                     buttons[rr][cc-1].mousePressed();
                                 }
-                                if(isValid(rr,cc+1) && !buttons[rr][cc+1].isMarked() && !buttons[rr][cc+1].isClicked())
+                                if(isValid(rr,cc+1) && !buttons[rr][cc+1].isMarked() && !buttons[rr][cc+1].isClicked() )//&& buttons[rr][cc+1].getCl()==color(100))
                                 {
                                     buttons[rr][cc+1].mousePressed();
                                 }
-                                if(isValid(rr+1,cc-1) && !buttons[rr+1][cc-1].isMarked() && !buttons[rr+1][cc-1].isClicked())
+                                if(isValid(rr+1,cc-1) && !buttons[rr+1][cc-1].isMarked() && !buttons[rr+1][cc-1].isClicked() )//&& buttons[rr+1][cc-1].getCl()==color(100))
                                 {
                                     buttons[rr+1][cc-1].mousePressed();
                                 }
-                                if(isValid(rr+1,cc) && !buttons[rr+1][cc].isMarked() && !buttons[rr+1][cc].isClicked())
+                                if(isValid(rr+1,cc) && !buttons[rr+1][cc].isMarked() && !buttons[rr+1][cc].isClicked() )//&& buttons[rr+1][cc].getCl()==color(100))
                                 {
                                     buttons[rr+1][cc].mousePressed();
                                 }
-                                if(isValid(rr+1,cc+1) && !buttons[rr+1][cc+1].isMarked() && !buttons[rr+1][cc+1].isClicked())
+                                if(isValid(rr+1,cc+1) && !buttons[rr+1][cc+1].isMarked() && !buttons[rr+1][cc+1].isClicked() )//&& buttons[rr+1][cc+1].getCl()==color(100))
                                 {
                                     buttons[rr+1][cc+1].mousePressed();
                                 }
                                 middleClicked=null;
+                                bClickable=true;
+                                //midClickable=true;
                             }
                         }
-                    } 
+                    }*/
                 } 
-                if(!marked)
+                if(isLost && !marked)
                 {
                     clicked=true;
+                } 
+                if(clicked)
+                {
+                    marked=false;
                 }
             } 
         }
@@ -294,18 +321,20 @@ public class MSButton
                         if(clicked==false)
                         {
                             marked=!marked;
+                            //midClickable=true;
                         }
                     }
                 }
             }
         }
-
         if(newGame==true)
         {
             isLost=false;
             noBombs=true;
             clickable=false;
+            //bClickable=true;
             n=0;
+            for(int x=0;x<NUM_ROWS;x++)
             buttons=new MSButton[NUM_ROWS][NUM_COLS];
             for(int x=0;x<NUM_ROWS;x++)
             {
@@ -324,9 +353,27 @@ public class MSButton
             }
             bombs=new ArrayList <MSButton> ();
             newGame=false;
-            middleClicked=null;
+            //middleClicked=null;
+            //midClickable=true;
+            //m=0;
             loop();
         }
+        /*if(midClickable==false)
+        {
+            m++;
+            if(m>1)
+            {
+                midClickable=true; 
+                m=0; 
+            }
+        }*/
+        /*println("isLost: "+isLost);
+        println("noBombs: "+noBombs);
+        println("clickable: "+clickable);
+        println("bClickable: "+bClickable);
+        println("n: "+n);
+        println("newGame: "+newGame);
+        if(middleClicked==null) {println("null");}*/
     }
     
     public void draw () 
@@ -339,7 +386,7 @@ public class MSButton
             }
             else 
             {
-                fill(220);    
+                fill(220);   
             }
         }
         else if(marked)
@@ -353,14 +400,48 @@ public class MSButton
                 fill(255,255,0);    
             }
         }
-        else if (isWon()) 
+        else if (isWon()&&bombs.contains(this)) 
         {
-            fill(0,255,0);    
+            fill(0,255,0);   
         }
         else
         {
             fill(100);    
         }
+        /*if(clicked)
+        {
+            if(bombs.contains(this))
+            {
+                fill(255,0,0);
+            }
+            else
+            {
+                fill(220);
+            }
+        }
+        else if(marked)
+        {
+            fill(255,255,0);
+        }
+        else
+        {
+            fill(100);
+        }
+        if(isWon() && bombs.contains(this))
+        {
+            fill(0,255,0);
+        }
+        if(isLost && bombs.contains(this))
+        {
+            if(marked)
+            {
+                fill(0,255,0);
+            }
+            else
+            {
+                fill(255,0,0);
+            }
+        }*/
 
         rect(x, y, width, height);
         fill(0);
