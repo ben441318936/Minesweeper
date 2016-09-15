@@ -1,7 +1,7 @@
 import de.bezier.guido.*;
 public static int NUM_ROWS=30;
 public static int NUM_COLS=50;
-public static int NUM_BOMBS=100;
+public static int NUM_BOMBS=50;
 public static int SIZE_WIDTH=750;
 public static int SIZE_HEIGHT=450;
 public static int SIZE_MESSAGE=30;
